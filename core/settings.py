@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework', # Se incorpora Django REST FRAMEWORK
+    'api', # Se llama la api creada
 ]
 
 MIDDLEWARE = [
