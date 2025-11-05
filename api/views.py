@@ -1,12 +1,15 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from .models import Productos, Usuarios
 from .serializers import ProductosSerializers, UsuariosSerializers
 
 # Acciones de Usuario sin ID 
 class UsuarioLista(APIView):
+    # Todos los metodos bloqueados
+    permission_classes = [IsAuthenticated]
     # Obetenemos Todos los usuarios --> SELECT
     def get(self, request):
         usuarios = Usuarios.objects.all()
@@ -22,6 +25,8 @@ class UsuarioLista(APIView):
 
 # Acciones de Usaurio por ID    
 class UsuarioDetalle(APIView):
+    # Todos los metoso bloqueados
+    permission_classes = [IsAuthenticated]
     # Obtenemos un usuario por ID --> Busqueda por ID --> SELECT con WHERE
     def get(self, request, pk):
         usuario = get_object_or_404(Usuarios, pk=pk)
@@ -46,6 +51,11 @@ class UsuarioDetalle(APIView):
 
 # Acciones de Producto sin ID 
 class ProductoLista(APIView):
+        # Get Publico
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()] 
     # Obetenemos Todos los prodcutos --> SELECT
     def get(self, request):
         productos = Productos.objects.all()
@@ -61,6 +71,11 @@ class ProductoLista(APIView):
 
 # Acciones de Producto por ID    
 class ProductoDetalle(APIView):
+    # Get ID publico
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
     # Obtenemos un producto por ID --> Busqueda por ID --> SELECT con WHERE
     def get(self, request, pk):
         producto = get_object_or_404(Productos, pk=pk)
