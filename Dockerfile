@@ -5,10 +5,10 @@ WORKDIR /app
 # Copiamos nuestro archivo de requirements para las liebrerias utilizadas en nuestro proyecto 
 COPY requirements.txt .
 # Se instalan librerias del requirements 
-RUN pip Install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 # Se copia todo al contenedor
 COPY . .
 # El pueto que tendra el Django 
 EXPOSE 8000
 # Comando por a ejecutar por consola
-CMD["python", "manage.py", "runserver","0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver","0.0.0.0:8000"]
