@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
 export default function Products() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/productos");
+        const response = await fetch(`${API_URL}/api/productos`);
         if (!response.ok) throw new Error("Error al obtener productos");
         const data = await response.json();
         setProducts(data);

@@ -10,6 +10,7 @@ import DeleteConfirm from "../components/DeleteConfirm";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function UsersTable() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -63,7 +64,7 @@ export default function UsersTable() {
 const fetchUsuarios = async () => {
   try {
     const token = localStorage.getItem("access_token");
-    const response = await fetch("http://localhost:8000/api/usuarios", {
+    const response = await fetch(`${API_URL}/api/usuarios`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -90,8 +91,8 @@ const fetchUsuarios = async () => {
         console.log("Datos enviados al backend:", usuario);
       const token = localStorage.getItem("access_token");
       const url = selectedUser
-        ? `http://localhost:8000/api/usuarios/${selectedUser.id}`
-        : "http://localhost:8000/api/usuarios";
+        ? `${API_URL}/api/usuarios/${selectedUser.id}`
+        : `${API_URL}/api/usuarios`;
       const method = selectedUser ? "PUT" : "POST";
 
       const response = await fetch(url, {
@@ -131,7 +132,7 @@ const fetchUsuarios = async () => {
     try {
       const token = localStorage.getItem("access_token");
       const response = await fetch(
-        `http://localhost:8000/api/usuarios/${selectedUser.id}`,
+        `${API_URL}/api/usuarios/${selectedUser.id}`,
         {
           method: "DELETE",
           headers: {

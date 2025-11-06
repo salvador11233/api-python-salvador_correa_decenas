@@ -10,6 +10,7 @@ import DeleteConfirm from "../components/DeleteConfirm";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function ProductsTable() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [rowData, setRowData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -61,7 +62,7 @@ export default function ProductsTable() {
 
     const fetchProductos = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/productos");
+            const response = await fetch(`${API_URL}/api/productos`);
             if (!response.ok) throw new Error("Error al obtener productos");
             const data = await response.json();
             setRowData(data);
@@ -82,8 +83,8 @@ export default function ProductsTable() {
     try {
       const token = localStorage.getItem("access_token");
       const url = selectedProduct
-        ? `http://localhost:8000/api/productos/${selectedProduct.id}`
-        : "http://localhost:8000/api/productos";
+        ? `${API_URL}/api/productos/${selectedProduct.id}`
+        : `${API_URL}/api/productos`;
 
       const method = selectedProduct ? "PUT" : "POST";
 
@@ -122,7 +123,7 @@ export default function ProductsTable() {
     try {
       const token = localStorage.getItem("access_token");
       const response = await fetch(
-        `http://localhost:8000/api/productos/${selectedProduct.id}`,
+        `${API_URL}/api/productos/${selectedProduct.id}`,
         {
           method: "DELETE",
           headers: {

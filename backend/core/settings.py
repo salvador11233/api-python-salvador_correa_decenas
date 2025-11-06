@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +30,7 @@ SECRET_KEY = 'django-insecure-h^)*8=m8)1!uv5wypsi$%3p7kg+kp@!=w!-z67+af4#0a017*1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*", os.getenv("DJANGO_ALLOWED_HOST", "localhost")]
 
 
 # Application definition
@@ -140,7 +144,7 @@ SIMPLE_JWT = {
 
 # Se añade para que pueda ser peticiones desde el front
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",   
+    os.getenv("FRONTEND_URL", "http://localhost:5173"),
 ]
 
 CORS_ALLOW_CREDENTIALS = True
