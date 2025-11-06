@@ -5,6 +5,8 @@ class UsuariosSerializers(serializers.ModelSerializer):
     class Meta:
         model = Usuarios
         fields = '__all__'
+        #Oculta la contraseña
+        extra_kwargs = {'password':{'write_only':True}}
 
 class ProductosSerializers(serializers.ModelSerializer):
     class Meta:

@@ -126,7 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Se añade paqueteria de JWT
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASS' : ('rest_framework_simplejwt.authentication.JWTAutehbtication',),
+    'DEFAULT_AUTHENTICATION_CLASSES' : ('rest_framework_simplejwt.authentication.JWTAuthentication',),
 }
 # Se coloca tiempo de vida del token
 SIMPLE_JWT = {

@@ -2,7 +2,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 from .models import Productos, Usuarios
 from .serializers import ProductosSerializers, UsuariosSerializers
 
@@ -96,4 +98,35 @@ class ProductoDetalle(APIView):
         producto = get_object_or_404(Productos, pk=pk)
         producto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+# Para inicio de siseión con los usuarios registrados
+class LoginUsuariosView(APIView):
+       def post(self, request):
+        nombre = request.data.get("nombre")
+        password = request.data.get("password")
+
+        try:
+            usuario = Usuarios.objects.get(nombre=nombre, activo=True)
+        except Usuarios.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        if not usuario.verificar_password(password):
+            return Response({"error": "Contraseña incorrecta"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Se hace puente con el modelo User de Django
+        usuario_temp, _ = User.objects.get_or_create(
+            username=usuario.nombre,
+            defaults={'password': usuario.password}
+        )
+
+        refresh = RefreshToken.for_user(usuario_temp)
+
+        # Si el login es correcto se genera el token
+        refresh = RefreshToken.for_user(usuario)
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "nombre": usuario.nombre,
+            "apellido": usuario.apellido,
+        })
     

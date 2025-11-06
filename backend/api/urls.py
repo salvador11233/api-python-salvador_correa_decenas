@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import(UsuarioLista, UsuarioDetalle, ProductoLista, ProductoDetalle)
+from .views import(UsuarioLista, UsuarioDetalle, ProductoLista, ProductoDetalle, LoginUsuariosView)
 
 urlpatterns = [
     # URLs de Usuarios sin ID
@@ -11,5 +11,8 @@ urlpatterns = [
     path('productos', ProductoLista.as_view(), name='producto_lista'),
     # URLs de Producto con ID
     path('prodcutos', ProductoDetalle.as_view(), name='producto_detalle'),
+
+    # Login de usuarios
+    path("login/", LoginUsuariosView.as_view(), name="login_usuarios"),
 
 ]
