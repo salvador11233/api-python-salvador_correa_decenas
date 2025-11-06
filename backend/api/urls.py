@@ -10,7 +10,7 @@ urlpatterns = [
     # URLs de Productos sin ID
     path('productos', ProductoLista.as_view(), name='producto_lista'),
     # URLs de Producto con ID
-    path('prodcutos', ProductoDetalle.as_view(), name='producto_detalle'),
+    path('productos/<int:pk>', ProductoDetalle.as_view(), name='producto_detalle'),
 
     # Login de usuarios
     path("login/", LoginUsuariosView.as_view(), name="login_usuarios"),

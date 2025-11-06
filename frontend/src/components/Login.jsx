@@ -1,27 +1,46 @@
 import { useState } from "react";
 import { Lock, Mail } from "lucide-react";
-import { useLogin } from "../hooks/useLogin";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [form, setForm] = useState({ nombre: "", password: "" });
-  const { login, loading, error } = useLogin();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { login } = useAuth(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
-      const data = await login(form.nombre, form.password);
-      alert(`Bienvenido ${data.nombre}`);
-      // Puedes redirigir con window.location.href o react-router-dom
-      // window.location.href = "/dashboard";
+      const response = await fetch("http://localhost:8000/api/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) throw new Error("Usuario o contraseña incorrectos");
+
+      const data = await response.json();
+
+
+      login(data.access);
+
+      navigate("/productos");
     } catch (err) {
-      alert("Usuario o contraseña incorrectos");
+      console.error("Error en login:", err);
+      setError("Usuario o contraseña incorrectos");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white font-poppins">
       <div className="bg-gray-900/60 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
-
         <h1 className="text-3xl font-bold text-center text-yellow-400 mb-2">
           Bienvenido
         </h1>
@@ -31,9 +50,7 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="text-sm text-gray-300 block mb-1">
-              Usuario
-            </label>
+            <label className="text-sm text-gray-300 block mb-1">Usuario</label>
             <div className="flex items-center bg-gray-800 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-yellow-400 transition">
               <Mail size={18} className="text-gray-400 mr-2" />
               <input

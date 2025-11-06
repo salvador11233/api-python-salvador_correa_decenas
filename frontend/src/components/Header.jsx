@@ -1,9 +1,19 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+
+  const handleClick = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate("/login");
+    }
+  };
 
   return (
     <header className="bg-gray-900 text-white py-4 px-6 flex justify-between items-center">
@@ -18,12 +28,21 @@ export default function Header() {
 
       <ul className="flex space-x-4">
         <li>
-          <Link
-            to="/login"
-            className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-md font-semibold hover:bg-yellow-300 transition"
-          >
-            Iniciar sesión
-          </Link>
+          {isAuthenticated ? (
+            <button
+              onClick={handleClick}
+              className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-400 transition"
+            >
+              Cerrar sesión
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-md font-semibold hover:bg-yellow-300 transition"
+            >
+              Iniciar sesión
+            </Link>
+          )}
         </li>
         <li>
           <a href="#" className="hover:text-yellow-400">
@@ -39,9 +58,19 @@ export default function Header() {
 
       {open && (
         <div className="absolute top-16 left-0 w-full bg-gray-800 text-center py-6 space-y-4">
-          <a href="/" className="block hover:text-yellow-400">Home</a>
-          <a href="#" className="block hover:text-yellow-400">Products</a>
-          <a href="#" className="block hover:text-yellow-400">Contact</a>
+          <Link to="/" className="block hover:text-yellow-400">
+            Home
+          </Link>
+          {isAuthenticated && (
+            <>
+              <Link to="/productos" className="block hover:text-yellow-400">
+                Productos
+              </Link>
+              <Link to="/usuarios" className="block hover:text-yellow-400">
+                Usuarios
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>
