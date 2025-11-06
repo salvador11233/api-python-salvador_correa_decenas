@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders', # Se añade para que pueda ser cosumido por el front
     'rest_framework', # Se incorpora Django REST FRAMEWORK
     'api', # Se llama la api creada
-    'corsheaders', # Se añade para que pueda ser cosumido por el front
 ]
 
 MIDDLEWARE = [
@@ -159,3 +159,5 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+# Para reconcer como tabla de autentificación
+AUTH_USER_MODEL = 'api.Usuarios'

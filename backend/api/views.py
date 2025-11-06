@@ -4,7 +4,6 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
 from .models import Productos, Usuarios
 from .serializers import ProductosSerializers, UsuariosSerializers
 
@@ -19,10 +18,18 @@ class UsuarioLista(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     # Damos de alta a los usuarios --> INSERT
     def post(self, request):
-        serializer = UsuariosSerializers(data=request.data)
+        data = request.data.copy()
+
+        # se genera automáticamente el username
+        if 'username' not in data or not data['username']:
+            nombre = data.get('nombre', '')
+            data['username'] = f"{nombre}".lower()
+
+        serializer = UsuariosSerializers(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Acciones de Usaurio por ID    
@@ -37,11 +44,22 @@ class UsuarioDetalle(APIView):
     
     # Actualización del usuario --> Update
     def put(self, request, pk):
-        usuario = get_object_or_404(Usuarios, pk=pk)
-        serializer = UsuariosSerializers(usuario, data=request.data)
+        try:
+            usuario = Usuarios.objects.get(pk=pk)
+        except Usuarios.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+
+        # Evita que el username cause error si no lo mandan
+        if 'username' not in data or not data['username']:
+            data['username'] = usuario.username
+
+        serializer = UsuariosSerializers(usuario, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # Eliminación del usuario --> Delete
@@ -113,14 +131,6 @@ class LoginUsuariosView(APIView):
         if not usuario.verificar_password(password):
             return Response({"error": "Contraseña incorrecta"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        # Se hace puente con el modelo User de Django
-        usuario_temp, _ = User.objects.get_or_create(
-            username=usuario.nombre,
-            defaults={'password': usuario.password}
-        )
-
-        refresh = RefreshToken.for_user(usuario_temp)
-
         # Si el login es correcto se genera el token
         refresh = RefreshToken.for_user(usuario)
         return Response({
