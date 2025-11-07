@@ -4,29 +4,34 @@ Examen Práctico Backend (Python)
 
 Aplicación fullstack con Django REST Framework (backend) y React + Vite (frontend) desplegada mediante Docker.
 
-Permite autenticar usuarios mediante JWT y realizar operaciones CRUD sobre productos y usuarios.
-Repositorio: https://github.com/salvador11233/api-python-salvador_correa_decenas
-**Usuario de pruebas:** 
-Username= *Salvador*
+Permite autenticar usuarios mediante JWT y realizar operaciones CRUD sobre productos y usuarios.  
+  
+Repositorio: https://github.com/salvador11233/api-python-salvador_correa_decenas 
+
+**Usuario de pruebas:**  
+Username= *Salvador*  
 Password= *S123R*
 
 
 # Tecnologías utilizadas
-**Backend**
-•	Python 3.12
-•	Django 5.x
-•	Django REST Framework
-•	Django CORS Headers
-•	python-dotenv
-•	JWT (SimpleJWT)
-**Frontend**
-•	React + Vite
-•	TailwindCSS
-•	ag-Grid
-•	React Router
-•	Lucide Icons
-**Infraestructura**
-•	Docker & Docker Compose
+**Backend**  
+•	Python 3.12  
+•	SQLite  
+•	Django 5.x  
+•	Django REST Framework  
+•	Django CORS Headers  
+•	python-dotenv  
+•	JWT (SimpleJWT) 
+  
+**Frontend**  
+•	React + Vite  
+•	TailwindCSS  
+•	ag-Grid  
+•	React Router  
+•	Lucide Icons  
+  
+**Infraestructura**  
+•	Docker & Docker Compose  
 •	AWS EC2 (Ubuntu 24.04)
 
 # ¿Cómo correr el proyecto?
@@ -36,28 +41,31 @@ Password= *S123R*
 2.	Se ejecuta y se deja seleccionados las dos opciones, se da en siguiente.
 
 3.	Se comenzará a instalar y cuando termine solicitara reiniciar el equipo.
+   
 4.	Aceptamos los términos y condiciones.
 
 5.	Iniciará, donde ya lo podemos usar.
 
-6.	Clonar el repositorio
-	git clone https://github.com/salvador11233/api-python-salvador_correa_decenas.git
+6.	Clonar el repositorio  
+	git clone https://github.com/salvador11233/api-python-salvador_correa_decenas.git  
 	cd api-python-salvador_correa_decenas
 	
 7.	Creamos los archivos .env
+  
+	**Backend (/backend/.env)**  
+	DEBUG=TRUE  
+	DJANGO_ALLOWED_HOST=http://localhost:8000  
+	FRONTEND_URL=http://localhost:5173  
+	  
+	**Frontend (/frontend/.env)**  
+	VITE_API_URL=http://localhost:8000
 
-**Backend (/backend/.env)**
-DEBUG=TRUE
-DJANGO_ALLOWED_HOST=http://localhost:8000
-FRONTEND_URL=http://localhost:5173
+8.	Construimos y levantamos los contenedores con:
+    
+`docker-compose up -d --build`  
 
-**Frontend (/frontend/.env)**
-VITE_API_URL=http://localhost:8000
-
-8.	Construimos y levantamos los contenedores
-**docker-compose up -d --build**
-Esto levantará dos servicios:
-•	backend: en http://localhost:8000
+Esto levantará dos servicios:  
+•	backend: en http://localhost:8000  
 •	frontend: en http://localhost:5173
 
 # ¿Cómo levantar el entorno local sin Docker?
@@ -75,27 +83,47 @@ Esto levantará dos servicios:
 # Comandos de prueba para endpoints con postman
 **Autenticación**
 
-POST http://localhost:8000/api/token/
-{
-  "username": "Salvador",
+POST http://localhost:8000/api/login/  
+`{
+  "username": "Salvador",  
   "password": "S123R"
-}
+}`  
 
 **Obtener productos**
 
-GET http://localhost:8000/api/productos/
+GET http://localhost:8000/api/productos
 
 **Crear producto**
 
-POST http://localhost:8000/api/productos/
+POST http://localhost:8000/api/productos
 Headers: Authorization: Bearer <*TOKEN*>
 
 Body:
 `{
-  "nombre": " Multimetro Stern",
-  "precio": 1000,
-  "stock": 5
+  "nombre": " Multimetro Stern",  
+  "precio": 1000,  
+  "stock": 5  
 }`
+
+**Obtener usuarios**
+
+GET http://localhost:8000/api/usuarios  
+Headers: Authorization: Bearer <*TOKEN*>
+
+**Crear usuario**
+
+POST http://localhost:8000/api/usuarios  
+Headers: Authorization: Bearer <*TOKEN*>
+
+Body:
+`{
+	"nombre": "Eliza",  
+    "apellido": "Vilchis",  
+    "edad": 28,  
+	"password": "1234",  
+    "activo": true   
+}`
+
 
 # Historial de commits
 
